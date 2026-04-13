@@ -7,7 +7,7 @@
 - **Frontend**: React (JSX) — runs in Claude artifact or any React app
 - **Backend**: Python FastAPI — runs locally on port 8000
 - **Database**: SQLite (auto-created as `expenseiq.db`)
-- **AI**: Anthropic Claude (claude-sonnet) for insights
+- **AI**: 🦙 Ollama (Llama3 - local, no API key needed)
 - **PDF**: ReportLab
 
 ---
@@ -15,11 +15,7 @@
 ## 1. Backend Setup
 
 ```bash
-cd backend
 pip install -r requirements.txt
-
-# Set your Anthropic API key (required for AI insights)
-export ANTHROPIC_API_KEY=sk-ant-...
 
 # Start the server
 uvicorn main:app --reload --port 8000
@@ -30,7 +26,23 @@ API docs at http://localhost:8000/docs
 
 ---
 
-## 2. Frontend Setup
+## 2. AI Setup (Ollama — REQUIRED for insights)
+
+```bash
+# Install ollama (if not installed)
+brew install ollama   # Mac
+# or download from https://ollama.com
+
+# Run model
+ollama run llama3
+```
+
+⚠️ Keep Ollama running in background
+Backend uses: http://localhost:11434
+
+---
+
+## 3. Frontend Setup
 
 Option A — Use the .jsx file in a React project:
 ```bash
@@ -49,23 +61,27 @@ npm install
 npm run dev
 ```
 
-Option C — Upload to Claude.ai as an artifact and run directly.
-
 ---
 
-## 3. CSV Format
+## 4. CSV Format
 
 Your CSV must have these exact columns:
 ```
-date,merchant,amount,category
-2026-04-01,Zomato,480,Food & Dining
-2026-04-02,BigBasket,1240,Groceries
-2026-04-03,Rapido,120,Transport
+Date,Category,Amount,Flow
+13-Apr-26,Grocery,551,outward
+13-Apr-26,Salary/Income,1414.82,inward
+09-Apr-26,Investment,34000,outward
 ```
 
+### 🔁 Flow Meaning (VERY IMPORTANT)
+| Flow | Meaning |
+|--------|----------|
+| outward	| Expense (money spent) |
+| inward |	Income / refund / cashback |
+
 ### Supported categories:
-- Food & Dining
-- Groceries
+- Food & Drinks
+- Grocery
 - Transport
 - Entertainment
 - Health
@@ -73,11 +89,11 @@ date,merchant,amount,category
 - Shopping
 - Travel
 - Education
-- Other
+- Others
 
 ---
 
-## 4. API Endpoints
+## 5. API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -94,22 +110,25 @@ date,merchant,amount,category
 
 ---
 
-## 5. Environment Variables
+## 6. Metrics Explained
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| ANTHROPIC_API_KEY | Yes (for AI) | Your Anthropic API key |
-
+| Metric	| Meaning |
+|----------|----------|
+| Total Spend	| Only outward expenses (excludes investments) |
+| Income	| All inward cash |
+| Investment	| Money invested (tracked separately) |
+| Net	| Income - Spend |
+| Daily Avg	| Avg spend per active day |
 ---
 
 ## Features
 
-- Upload monthly transaction CSVs
-- Persistent SQLite database
-- Month selector to compare periods
-- Category-wise spending breakdown with charts
-- AI insights powered by Claude (warns about overspending, gives tips)
-- Budget tracking with over-budget alerts (saved to DB)
-- One-click PDF report download (styled with ReportLab)
-- Full transaction search + filter table
-- Analytics page with spark charts per category
+- Upload CSV (bank statements → clean format)
+- Smart classification (Flow-based)
+- Spend vs Income vs Investment tracking
+- Clean dashboard (no misleading totals)
+- Category breakdown (top categories only)
+- Transaction search + filters
+- AI Insights (local LLM via Ollama)
+- PDF reports (ReportLab)
+- Persistent SQLite storage
