@@ -1,0 +1,9 @@
+venv/
+node_modules/
+expenseiq/node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+Transactions_download_13-Apr-2026.csv

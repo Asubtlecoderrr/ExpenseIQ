@@ -1,0 +1,224 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { display: flex; height: 100vh; min-height: 600px; background: var(--color-background-tertiary); }
+.sidebar { width: 200px; background: var(--color-background-primary); border-right: 0.5px solid var(--color-border-tertiary); padding: 20px 0; display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.logo { padding: 0 16px 20px; font-size: 16px; font-weight: 500; color: var(--color-text-primary); border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.logo-icon { width: 24px; height: 24px; background: #3266ad; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 14px; height: 14px; fill: white; }
+.nav-item { padding: 9px 16px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; border-radius: 0; display: flex; align-items: center; gap: 8px; transition: background 0.1s; }
+.nav-item:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.nav-item.active { background: var(--color-background-info); color: #185FA5; font-weight: 500; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+.main { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; }
+.topbar h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.upload-btn { background: #3266ad; color: white; border: none; border-radius: var(--border-radius-md); padding: 8px 16px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.upload-btn:hover { background: #185FA5; }
+.month-select { padding: 7px 12px; font-size: 13px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+.metric-up { color: #A32D2D; font-size: 11px; margin-top: 4px; }
+.metric-down { color: #3B6D11; font-size: 11px; margin-top: 4px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.card { background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 18px; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 16px; }
+.cat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cat-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.cat-info { flex: 1; min-width: 0; }
+.cat-name { font-size: 12px; color: var(--color-text-secondary); }
+.cat-bar-wrap { height: 5px; background: var(--color-background-secondary); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.cat-bar { height: 100%; border-radius: 3px; }
+.cat-amount { font-size: 13px; font-weight: 500; color: var(--color-text-primary); flex-shrink: 0; }
+.cat-pct { font-size: 11px; color: var(--color-text-tertiary); text-align: right; }
+.txn-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.txn-row:last-child { border-bottom: none; }
+.txn-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.txn-info { flex: 1; }
+.txn-name { font-size: 13px; color: var(--color-text-primary); }
+.txn-cat { font-size: 11px; color: var(--color-text-tertiary); }
+.txn-amount { font-size: 13px; font-weight: 500; color: #A32D2D; }
+.insight-box { background: var(--color-background-info); border-radius: var(--border-radius-md); padding: 12px 14px; margin-bottom: 10px; border-left: 3px solid #3266ad; }
+.insight-title { font-size: 12px; font-weight: 500; color: #185FA5; margin-bottom: 3px; }
+.insight-text { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 16 16"><path d="M2 4h12v8H2z" opacity="0.3"/><path d="M2 6h12M5 10h2"/></svg>
+      </div>
+      ExpenseIQ
+    </div>
+    <div class="nav-item active"><div class="nav-dot"></div> Dashboard</div>
+    <div class="nav-item"><div class="nav-dot"></div> Transactions</div>
+    <div class="nav-item"><div class="nav-dot"></div> Analytics</div>
+    <div class="nav-item"><div class="nav-dot"></div> Budgets</div>
+    <div class="nav-item"><div class="nav-dot"></div> Reports</div>
+    <div style="flex:1"></div>
+    <div class="nav-item" style="border-top: 0.5px solid var(--color-border-tertiary); padding-top: 12px;"><div class="nav-dot"></div> Settings</div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <p style="font-size:12px; color:var(--color-text-tertiary); margin-top:2px;">April 2026 overview</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <select class="month-select"><option>April 2026</option><option>March 2026</option><option>Feb 2026</option></select>
+        <button class="upload-btn">+ Upload CSV</button>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Total spent</div>
+        <div class="metric-value">₹42,380</div>
+        <div class="metric-up">+12% vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Transactions</div>
+        <div class="metric-value">87</div>
+        <div class="metric-sub">across 7 categories</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Biggest category</div>
+        <div class="metric-value" style="font-size:16px;">Food & Dining</div>
+        <div class="metric-up">₹11,200 — 26%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Daily average</div>
+        <div class="metric-value">₹1,412</div>
+        <div class="metric-down">-5% vs last month</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <div class="card-title">Spending by category</div>
+
+        <div class="cat-row">
+          <div class="cat-icon" style="background:#E6F1FB;">🍔</div>
+          <div class="cat-info">
+            <div class="cat-name">Food & dining</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:65%; background:#3266ad;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹11,200</div>
+            <div class="cat-pct">26%</div>
+          </div>
+        </div>
+
+        <div class="cat-row">
+          <div class="cat-icon" style="background:#EAF3DE;">🛒</div>
+          <div class="cat-info">
+            <div class="cat-name">Groceries</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:48%; background:#639922;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹8,500</div>
+            <div class="cat-pct">20%</div>
+          </div>
+        </div>
+
+        <div class="cat-row">
+          <div class="cat-icon" style="background:#FAEEDA;">🚗</div>
+          <div class="cat-info">
+            <div class="cat-name">Transport</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:35%; background:#BA7517;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹6,200</div>
+            <div class="cat-pct">15%</div>
+          </div>
+        </div>
+
+        <div class="cat-row">
+          <div class="cat-icon" style="background:#EEEDFE;">🎬</div>
+          <div class="cat-info">
+            <div class="cat-name">Entertainment</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:28%; background:#534AB7;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹4,900</div>
+            <div class="cat-pct">12%</div>
+          </div>
+        </div>
+
+        <div class="cat-row">
+          <div class="cat-icon" style="background:#FAECE7;">💊</div>
+          <div class="cat-info">
+            <div class="cat-name">Health</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:20%; background:#D85A30;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹3,400</div>
+            <div class="cat-pct">8%</div>
+          </div>
+        </div>
+
+        <div class="cat-row" style="margin-bottom:0;">
+          <div class="cat-icon" style="background:#F1EFE8;">💡</div>
+          <div class="cat-info">
+            <div class="cat-name">Utilities</div>
+            <div class="cat-bar-wrap"><div class="cat-bar" style="width:14%; background:#888780;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cat-amount">₹2,600</div>
+            <div class="cat-pct">6%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">AI insights</div>
+        <div class="insight-box">
+          <div class="insight-title">Food spending is high</div>
+          <div class="insight-text">You spent ₹11,200 on food this month — 40% above your 3-month average of ₹8,000. Consider meal prepping to cut this down.</div>
+        </div>
+        <div class="insight-box" style="background:var(--color-background-success); border-left-color:#3B6D11;">
+          <div class="insight-title" style="color:#3B6D11;">Transport improved</div>
+          <div class="insight-text" style="color:var(--color-text-secondary);">Transport costs dropped by ₹1,400 vs last month. Great job — likely from reduced cab rides.</div>
+        </div>
+        <div class="insight-box" style="background:var(--color-background-warning); border-left-color:#BA7517;">
+          <div class="insight-title" style="color:#854F0B;">Entertainment spike</div>
+          <div class="insight-text" style="color:var(--color-text-secondary);">3 large entertainment transactions this month. OTT subscriptions account for ₹1,800 of the total.</div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div class="card-title" style="margin-bottom:12px;">Recent transactions</div>
+          <div class="txn-row">
+            <div class="txn-icon" style="background:#E6F1FB;">🍔</div>
+            <div class="txn-info">
+              <div class="txn-name">Zomato</div>
+              <div class="txn-cat">Food & dining · Apr 12</div>
+            </div>
+            <div class="txn-amount">-₹480</div>
+          </div>
+          <div class="txn-row">
+            <div class="txn-icon" style="background:#EAF3DE;">🛒</div>
+            <div class="txn-info">
+              <div class="txn-name">Big Basket</div>
+              <div class="txn-cat">Groceries · Apr 11</div>
+            </div>
+            <div class="txn-amount">-₹1,240</div>
+          </div>
+          <div class="txn-row">
+            <div class="txn-icon" style="background:#FAEEDA;">🚗</div>
+            <div class="txn-info">
+              <div class="txn-name">Rapido</div>
+              <div class="txn-cat">Transport · Apr 11</div>
+            </div>
+            <div class="txn-amount">-₹120</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
