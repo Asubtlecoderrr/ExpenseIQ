@@ -1,5 +1,8 @@
 # ExpenseIQ — Full Stack Setup Guide
 
+<img width="1125" height="861" alt="Screenshot 2026-04-13 at 8 22 53 PM" src="https://github.com/user-attachments/assets/d106edd6-2a0b-41ed-a4a5-abfa9958a02d" />
+
+
 ## Stack
 - **Frontend**: React (JSX) — runs in Claude artifact or any React app
 - **Backend**: Python FastAPI — runs locally on port 8000
