@@ -273,7 +273,7 @@ def get_summary(month: Optional[str] = None):
         cat = r["category"].strip()
         flow = r.get("flow", "").strip().lower()
         is_investment = cat.lower().startswith("investment")
-        
+
         # ── FLOW BASED TOTALS ──
         if is_investment:
             total_investment += amt
@@ -431,6 +431,7 @@ You are a personal finance advisor.
 Return ONLY valid JSON.
 Do NOT include text before or after JSON.
 Do NOT use markdown.
+The amount is in INR (Rs.)
 
 Return STRICTLY this format:
 

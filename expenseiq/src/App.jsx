@@ -332,11 +332,10 @@ function Transactions({ month }) {
                   <td style={{ padding: "12px 16px", fontSize: 13, color: "#888" }}>{t.date}</td>
                   <td style={{ padding: "12px 16px", fontWeight: 500, fontSize: 14 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span style={{ fontSize: 18 }}>{c(t.category).icon}</span>{t.category}
+                      <td style={{ padding: "12px 16px" }}>
+                        <Badge label={t.category} bg={c(t.category).bg} color={c(t.category).bar} />
+                      </td>
                     </div>
-                  </td>
-                  <td style={{ padding: "12px 16px" }}>
-                    <Badge label={t.category} bg={c(t.category).bg} color={c(t.category).bar} />
                   </td>
                   <td style={{ padding: "12px 16px", fontWeight: 700, fontSize: 14, color: "#C62828", textAlign: "right" }}>{fmt(t.amount)}</td>
                 </tr>
@@ -362,14 +361,20 @@ function Analytics({ month }) {
   const cats   = sum?.categories || [];
   const total  = sum?.total_spend || 0;
   const insights = Array.isArray(ins?.insights) ? ins.insights : [];
-
+  const filteredCats = cats.filter(c => c.category !== "Investment");
   return (
     <div style={{ padding: 28 }}>
-      <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.5px" }}>Analytics</h1>
-      <p style={{ color: "#888", fontSize: 13, margin: "0 0 24px" }}>Spending patterns · {month || "All time"}</p>
-
+      <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.5px" }}>Category Breakdown</h1>
+      <p style={{ color: "#888", fontSize: 13, margin: "0 0 24px" }}>Where your money is going · {month || "All time"}</p>
+      <div style={{ marginBottom: 20 }}>
+        <MetricCard 
+          label="Top Spending Category"
+          value={sum?.top_category}
+          sub={cats.length ? fmt(cats[0].total) : "—"}
+        />
+      </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 20 }}>
-        {cats.map(cat => {
+        {filteredCats.slice(0, 6).map(cat => {
           const catTxns = txns.filter(t => t.category === cat.category);
           const avg = catTxns.length ? cat.total / catTxns.length : 0;
           const cl = c(cat.category);
@@ -382,7 +387,19 @@ function Analytics({ month }) {
                 </div>
                 <span style={{ fontWeight: 700, fontSize: 16 }}>{fmt(cat.total)}</span>
               </div>
-              <SparkBars txns={catTxns} color={cl.bar} />
+              <div style={{ marginTop: 10 }}>
+                <div style={{ height: 6, background: "#eee", borderRadius: 4 }}>
+                  <div 
+                    style={{ 
+                      width: `${cat.pct}%`, 
+                      background: cl.bar, 
+                      height: "100%", 
+                      borderRadius: 4,
+                      transition: "width 0.5s ease"
+                    }} 
+                  />
+                </div>
+              </div>
               <div style={{ display: "flex", gap: 16, marginTop: 10 }}>
                 <div><div style={{ fontSize: 10, color: "#AAA", textTransform: "uppercase", letterSpacing: 1 }}>Transactions</div><div style={{ fontWeight: 600, fontSize: 14 }}>{catTxns.length}</div></div>
                 <div><div style={{ fontSize: 10, color: "#AAA", textTransform: "uppercase", letterSpacing: 1 }}>Avg/txn</div><div style={{ fontWeight: 600, fontSize: 14 }}>{fmt(avg)}</div></div>
@@ -478,7 +495,9 @@ function Reports({ month }) {
   const { data: sum } = useApi(() => api.summary(month), [month]);
   const { data: ins } = useApi(() => api.insights(month), [month]);
   const insights = ins?.insights || [];
-  const cats = sum?.categories || [];
+  const cats = (sum?.categories || [])
+    .filter(c => c.category !== "Investment")
+    .sort((a, b) => b.total - a.total);
 
   return (
     <div style={{ padding: 28 }}>
