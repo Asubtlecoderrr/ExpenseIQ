@@ -1,6 +1,14 @@
 # ExpenseIQ — Full Stack Setup Guide
 
+## DashBoard
 <img width="1125" height="861" alt="Screenshot 2026-04-13 at 8 22 53 PM" src="https://github.com/user-attachments/assets/d106edd6-2a0b-41ed-a4a5-abfa9958a02d" />
+
+## Analytics and AI Insights based on selected month
+<img width="1125" height="861" alt="Screenshot 2026-04-13 at 8 33 05 PM" src="https://github.com/user-attachments/assets/66686861-9a5e-416f-b877-dfcfcc528920" />
+
+## Upload csv
+<img width="1125" height="861" alt="Screenshot 2026-04-13 at 8 33 26 PM" src="https://github.com/user-attachments/assets/c019694c-e549-4d81-9bc1-8f4d43d745d2" />
+
 
 
 ## Stack
