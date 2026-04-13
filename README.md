@@ -16,7 +16,7 @@
 - **Backend**: Python FastAPI — runs locally on port 8000
 - **Database**: SQLite (auto-created as `expenseiq.db`)
 - **AI**: 🦙 Ollama (Llama3 - local, no API key needed)
-- **PDF**: ReportLa
+- **PDF**: ReportLab
 
 ---
 
